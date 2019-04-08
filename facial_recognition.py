@@ -6,8 +6,10 @@ import time
 import requests 
 
 #copy access key here#
+
 s3 = session.client('s3')
-timestamp=str(round(time.time()*1000))
+updatedtime=time.time()
+timestamp=str(round(updatedtime*1000))
 client=session.client('rekognition', 'us-east-1')
 bucket= 'smartdoorpictures'
 FACE_LIST= ["andrew", "johnny", "katie"]
@@ -83,3 +85,20 @@ if __name__ == "__main__":
 
 
     print(str.join(',', message))
+    
+    r=requests.get("http://3.208.217.100:3300/textuser/{}".format(key_target))
+    
+    while True:
+        if time.time()-updatedtime > 10:
+            r=requests.get("http://3.208.217.100:3300/accessstatus/{}".format(key_target))
+            response=json.loads(r.text)
+            #if response["status"]== "approved":
+            #nothing should happen or turn on green light
+            # if response["status"]=="declined":
+            #turn on red light
+            #if response["status"]=="pending":
+            #yellow light??
+            print (response["status"])
+            updatedtime=time.time()
+        
+            
