@@ -1,15 +1,17 @@
 import boto3
 import json
-#import picamera as picam
+import picamera
 import datetime
+import time
+import requests 
 
 #copy access key here#
-
 s3 = session.client('s3')
+timestamp=str(round(time.time()*1000))
 client=session.client('rekognition', 'us-east-1')
 bucket= 'smartdoorpictures'
 FACE_LIST= ["andrew", "johnny", "katie"]
-key_target= 'katie(testagainst).jpg'
+key_target= "intruder" +timestamp +".jpg"
 threshold=0
 RECOGNIZED_FACE = False
 IS_FACE=False
@@ -19,12 +21,11 @@ MIN_SIM= 60.0
 
 if __name__ == "__main__":
     #when camera is plugged in use this code
-    #with picamera.PiCamera() as camera:
-    #    camera.resolution= (1280, 720)
-    #    camera.capture('intruderface.jpg')
-    #s3.upload_file('intruderface.jpg', Bucket=bucket, Key= key_target)
-
-
+    with picamera.PiCamera() as camera:
+        camera.resolution= (1280, 720)
+        camera.capture('intruderface.jpg')
+    s3.upload_file('intruderface.jpg', Bucket=bucket, Key= key_target)
+       
     def detect_face(bucket, key, region_name = "us-east-1", attributes = ['ALL']):
         rekognition = session.client("rekognition", region_name)
         response = rekognition.detect_faces(
