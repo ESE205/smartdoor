@@ -1,11 +1,9 @@
 import boto3
 import json
 import picamera
-import datetime
 import time
-import requests 
+import requests
 
-#copy access key here#
 
 s3 = session.client('s3')
 updatedtime=time.time()
@@ -26,7 +24,7 @@ if __name__ == "__main__":
     with picamera.PiCamera() as camera:
         camera.resolution= (1280, 720)
         camera.capture('intruderface.jpg')
-    s3.upload_file('intruderface.jpg', Bucket=bucket, Key= key_target)
+    s3.upload_file('intruderface.jpg', Bucket=bucket, Key= key_target, ExtraArgs={'ContentType':"image/jpg"})
        
     def detect_face(bucket, key, region_name = "us-east-1", attributes = ['ALL']):
         rekognition = session.client("rekognition", region_name)
@@ -85,12 +83,12 @@ if __name__ == "__main__":
 
 
     print(str.join(',', message))
-    
-    r=requests.get("http://3.208.217.100:3300/textuser/{}".format(key_target))
+    print (key_target)
+    r=requests.get("http://3.208.217.100:1337/textuser/{}".format(key_target))
     
     while True:
         if time.time()-updatedtime > 10:
-            r=requests.get("http://3.208.217.100:3300/accessstatus/{}".format(key_target))
+            r=requests.get("http://3.208.217.100:1337/accessstatus/{}".format(key_target))
             response=json.loads(r.text)
             #if response["status"]== "approved":
             #nothing should happen or turn on green light
@@ -100,5 +98,5 @@ if __name__ == "__main__":
             #yellow light??
             print (response["status"])
             updatedtime=time.time()
-        
+            
             
