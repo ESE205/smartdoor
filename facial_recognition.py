@@ -15,9 +15,6 @@ print(sys.executable)
 
 #copy access key here#
 #db= MySQLdb.connect(host="smarterdoornew.c0rgvoudpusn.us-east-2.rds.amazonaws.com", user="jostrek123", passwd="205pass!", db="smarterdoor")
-session = boto3.Session(aws_access_key_id= "AKIAIEVZX4YEFALN25MA",
-                        aws_secret_access_key="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",
-                        region_name='us-east-1')
 
 s3 = session.client('s3')
 updatedtime=time.time()
