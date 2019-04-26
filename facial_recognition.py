@@ -14,8 +14,6 @@ print(sys.executable)
 
 
 #copy access key here#
-#db= MySQLdb.connect(host="smarterdoornew.c0rgvoudpusn.us-east-2.rds.amazonaws.com", user="jostrek123", passwd="205pass!", db="smarterdoor")
-
 s3 = session.client('s3')
 updatedtime=time.time()
 timestamp=str(round(updatedtime*1000))
