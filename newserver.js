@@ -1,7 +1,20 @@
 const express = require('express');
 const app = express();
+cont mysql = require('mysql');
+const utils = require('util');
+const conn = mysql.createConnection({
+    host: 'xxx',
+    user: 'xxx',
+    password: 'xxx',
+    database: 'xxx',
+    port: xxx
+});
+
+const query = utils.promisify(conn.query).bind(conn);
+
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 let i = 0;
@@ -18,6 +31,16 @@ console.log('texting for authorization with photo ${req.params.photoName}');
 const accountSid = '###';
 const authToken = '###';
 const client = require('twilio')(accountSid, authToken);
+    
+//conn.connect((err) => {
+//    if(err) {
+//        console.log('Unable to connect to mysql');
+//        throw err;
+//  }
+//        });
+    
+let qString = 'INSERT INTO door (intruderid, decision, tmstmp) VALUES (?,?,?)';
+await conn.query(qString, [req.params.photoName, 'pending', Date.now()];                 
 
 const message = await client.messages
     .create({
@@ -38,7 +61,12 @@ app.post('/sms', (req,res) => {
     twiml.message('Thank you for your response.  The visitor is being informed of your decision');
 
     res.writeHead(200, {'Content-Type': 'text/xml'});
-    acces[i] = 'approved';
+    if(JSON.parse(req.body.AddOns).results.marchex_sentiment.result.result>0.5){
+        access[i] = 'approved';
+    }
+    else {
+        access[i] = 'denied';
+    }
     i++;
     res.end(twiml.toString());
 
