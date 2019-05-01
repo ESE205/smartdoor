@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Static Site Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="upload.js"></script>
+    <style>
+        table {
+          border-collapse: collapse;
+          
+        }
+        table, td, th {
+          border: 1px solid black;
+        }
+        </style>
+</head>
+<body>
+    <h1 id="header">Welcome to Smarter Door</h1>
+    <p><b>Thank you for using Smarter Door, the best way to keep your space safe.  Use the link below to see past visitors to your door!</b></p>
+    <table id="data">
+        <tr>
+            <td>Intruder ID</td>
+           
+            <td>Time when door was accessed</td>
+            
+            <td>Decision</td>
+            
+            <td>Image of Visitor</td>
+          </tr>
+      
+    </table>
+    
+
+<script>
+
+async function renderdata(){
+  const res = await fetch('http://3.208.217.100:1337/webdata');
+  const data = await res.json();
+
+  const table = document.getElementById("data");
+  
+  data.data.forEach((e) => {
+    const row = document.createElement('tr');
+
+    const cell = document.createElement('td');
+    cell.innerHTML = e.intruderid;
+
+    const timecell = document.createElement('td');
+    let time = new Date(e.tmstmp);
+
+    const blank = document.createElement('td');
+    blank.innerHTML = "        ";
+
+    const decision = document.createElement('td');
+    decision.innerHTML = e.decision;
+
+    const link = document.createElement('td');
+    const bucket = document.createElement('a');
+    bucket.innerHTML = "View Visitor";
+    bucket.href = `https://s3.amazonaws.com/smartdoorpictures/${e.intruderid}`;
+    link.appendChild(bucket);
+
+    timecell.innerHTML = time.toISOString();
+    timecell.href = 'http://google.com'
+    row.appendChild(cell);
+    
+    row.appendChild(timecell);
+    
+    row.appendChild(decision);
+    
+    row.appendChild(link);
+    table.appendChild(row);
+
+  });
+  
+  //table.appendChild()
+}
+renderdata();
+
+</script>
+        
+</body>
+</html>
