@@ -230,7 +230,7 @@ while True:
                 #yellow light??
                 print (response["status"])
                 updatedtime=time.time()
-                
+            timestamp=str(round(updatedtime*1000))
                 
 
             
